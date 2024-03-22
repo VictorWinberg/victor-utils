@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import _ from "lodash/fp";
 import fs from "fs/promises";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
@@ -17,6 +18,10 @@ export function clearTerminal() {
 
 export function maybeIndex(index: number) {
   return index === -1 ? undefined : index;
+}
+
+export function maybeEmpty<T>(object: T) {
+  return _.isEmpty(object) ? undefined : object;
 }
 
 export function formatDate(date?: string) {

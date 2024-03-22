@@ -2,7 +2,15 @@ import _ from "lodash/fp";
 
 import * as api from "./api";
 import { LIBS, SERVICES } from "./constants";
-import { bump, dump, formatDate, load, log, maybeIndex } from "./utils";
+import {
+  bump,
+  dump,
+  formatDate,
+  load,
+  log,
+  maybeEmpty,
+  maybeIndex,
+} from "./utils";
 
 export async function prs() {
   const input = await load<typeof output>("pull-requests.json");
@@ -46,13 +54,6 @@ export async function prs() {
   }));
 
   const updated = output
-    .filter(
-      (pr) =>
-        !(
-          JSON.stringify(pr) ===
-          JSON.stringify(input.find((i) => i.id === pr.id))
-        )
-    )
     .map((pr) => {
       const prev = input.find((i) => i.id === pr.id);
       if (!prev) return pr;
@@ -66,12 +67,20 @@ export async function prs() {
         link: pr.link,
         new_comments: pr.comments - prev.comments || undefined,
         new_tasks: pr.tasks - prev.tasks || undefined,
-        new_activity: pr.activity?.slice(
-          0,
-          maybeIndex(_.findIndex(prev.activity?.[0], pr.activity))
+        new_activity: maybeEmpty(
+          pr.activity?.slice(
+            0,
+            maybeIndex(_.findIndex(prev.activity?.[0], pr.activity))
+          )
         ),
       });
-    });
+    })
+    .filter((pr) =>
+      _.some(
+        (key) => _.keys(pr).includes(key),
+        ["new_comments", "new_tasks", "new_activity"]
+      )
+    );
 
   if (updated.length > 0) {
     updated.forEach((pr) => log(pr));
