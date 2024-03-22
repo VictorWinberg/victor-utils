@@ -1,0 +1,25 @@
+{
+  "name": "victor-utils",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "tags": "tsx src/tags.ts",
+    "prs": "tsx src/prs.ts",
+    "watch": "tsx src/watch.ts"
+  },
+  "author": "VictorWinberg",
+  "license": "ISC",
+  "dependencies": {
+    "dayjs": "^1.11.10",
+    "lodash": "^4.17.21",
+    "node-fetch": "^3.3.2",
+    "open": "^10.1.0"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.0",
+    "@types/node": "^20.11.30",
+    "dotenv": "^16.4.5",
+    "tsx": "^4.7.1",
+    "typescript": "^5.4.3"
+  }
+}
