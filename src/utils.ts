@@ -6,7 +6,7 @@ import { dirname } from "path";
 import { inspect } from "util";
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+export const __dirname = dirname(__filename);
 
 export function bump() {
   process.stdout.write("\u0007");
