@@ -1,6 +1,7 @@
 import _ from "lodash/fp";
 
 import * as api from "./api";
+import config from "./config";
 import { LIBS, SERVICES } from "./constants";
 import {
   bump,
@@ -27,31 +28,35 @@ export async function prs() {
     _.flatten(await Promise.all(REPOS.map(api.getPullRequestsActivity)))
   );
 
-  const output = pullRequests.map((pr) => ({
-    id: pr.id,
-    title: pr.title,
-    author: pr.author.display_name,
-    repo: pr.destination.repository.name,
-    date: formatDate(pr.created_on),
-    link: pr.links.html.href,
-    state: pr.state,
-    comments: pr.comment_count,
-    tasks: pr.task_count,
-    activity: activityLog[pr.id]
-      ?.map(({ comment, approval, update }) => ({
-        comment: comment?.content.raw,
-        approval: approval ? true : undefined,
-        status: update?.changes.status?.new,
-        reviewers: update?.reviewers?.map(_.get("display_name")),
-        user:
-          comment?.user.display_name ||
-          approval?.user.display_name ||
-          update?.author.display_name,
-        date: formatDate(comment?.created_on || approval?.date || update?.date),
-      }))
-      .map(_.pickBy(_.identity)),
-    created: pr.created_on,
-  }));
+  const output = pullRequests
+    .map((pr) => ({
+      id: pr.id,
+      title: pr.title,
+      author: pr.author.display_name,
+      repo: pr.destination.repository.name,
+      date: formatDate(pr.created_on),
+      link: pr.links.html.href,
+      state: pr.state,
+      comments: pr.comment_count,
+      tasks: pr.task_count,
+      activity: activityLog[pr.id]
+        ?.map(({ comment, approval, update }) => ({
+          comment: comment?.content.raw,
+          approval: approval ? true : undefined,
+          status: update?.changes.status?.new,
+          reviewers: update?.reviewers?.map(_.get("display_name")),
+          user:
+            comment?.user.display_name ||
+            approval?.user.display_name ||
+            update?.author.display_name,
+          date: formatDate(
+            comment?.created_on || approval?.date || update?.date
+          ),
+        }))
+        .map(_.pickBy(_.identity)),
+      created: pr.created_on,
+    }))
+    .filter((pr) => JSON.stringify(pr).includes(config.bitbucket.author));
 
   const updated = output
     .map((pr) => {

@@ -9,5 +9,6 @@ export default {
       Authorization: `Basic ${process.env.BITBUCKET_APP_SECRET}`,
     },
     user: process.env.BITBUCKET_USER,
+    author: "Victor Winberg",
   },
 };
