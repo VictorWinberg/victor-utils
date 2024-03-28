@@ -2,7 +2,7 @@ import _ from "lodash/fp";
 
 import * as api from "./api";
 import { LIBS, SERVICES } from "./constants";
-import { dump, load, log } from "./utils";
+import { bump, dump, load, log } from "./utils";
 
 export async function tags() {
   const serviceTags = await Promise.all(SERVICES.map(api.getLatestTag));
@@ -25,6 +25,7 @@ export async function newTags() {
   if (_.isEmpty(diff)) return;
 
   log(diff);
+  bump();
 }
 
 log(await tags());
