@@ -13,6 +13,8 @@ import {
   maybeIndex,
 } from "./utils";
 
+const uniqueId = (pr) => `${pr.destination.repository.name}#${pr.id}`;
+
 export async function prs() {
   const input = await load<typeof output>("pull-requests.json");
 
@@ -30,16 +32,15 @@ export async function prs() {
 
   const output = pullRequests
     .map((pr) => ({
-      id: pr.id,
+      id: uniqueId(pr),
       title: pr.title,
       author: pr.author.display_name,
-      repo: pr.destination.repository.name,
       date: formatDate(pr.created_on),
       link: pr.links.html.href,
       state: pr.state,
       comments: pr.comment_count,
       tasks: pr.task_count,
-      activity: activityLog[pr.id]
+      activity: activityLog[uniqueId(pr)]
         ?.map(({ comment, approval, update }) => ({
           comment: comment?.content.raw,
           approval: approval ? true : undefined,
@@ -67,7 +68,6 @@ export async function prs() {
         id: pr.id,
         title: pr.title,
         author: pr.author,
-        repo: pr.repo,
         date: pr.date,
         link: pr.link,
         new_comments: pr.comments - prev.comments || undefined,
