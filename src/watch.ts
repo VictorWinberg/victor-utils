@@ -1,6 +1,6 @@
 import { clearTerminal } from "./utils";
 
-const WATCH_INTERVAL_MINUTES = 2;
+const WATCH_INTERVAL_MINUTES = 1;
 
 (async () => {
   clearTerminal();
