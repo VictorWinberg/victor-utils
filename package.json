@@ -12,7 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "dayjs": "^1.11.10",
-    "execa": "^8.0.1",
+    "execa": "github:sindresorhus/execa#main",
     "lodash": "^4.17.21",
     "node-fetch": "^3.3.2",
     "open": "^10.1.0"
