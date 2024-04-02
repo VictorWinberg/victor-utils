@@ -49,17 +49,22 @@ export async function prs() {
       comments: pr.comment_count,
       tasks: pr.task_count,
       activity: activityLog[uniqueId(pr)]
-        ?.map(({ comment, approval, update }) => ({
+        ?.map(({ comment, approval, update, changes_requested }) => ({
           comment: comment?.content.raw,
           approval: approval ? true : undefined,
+          changes_requested: changes_requested ? true : undefined,
           status: update?.changes.status?.new,
           reviewers: update?.reviewers?.map(_.get("display_name")),
           user:
             comment?.user.display_name ||
             approval?.user.display_name ||
-            update?.author.display_name,
+            update?.author.display_name ||
+            changes_requested?.user.display_name,
           date: formatDate(
-            comment?.created_on || approval?.date || update?.date
+            comment?.created_on ||
+              approval?.date ||
+              update?.date ||
+              changes_requested?.date
           ),
         }))
         .map(_.pickBy(_.identity)),

@@ -834,6 +834,40 @@ export type PullRequestActivity = {
         };
       };
     };
+    changes_requested?: {
+      date: string;
+      user: {
+        display_name: string;
+        links: {
+          self: {
+            href: string;
+          };
+          avatar: {
+            href: string;
+          };
+          html: {
+            href: string;
+          };
+        };
+        type: string;
+        uuid: string;
+        account_id: string;
+        nickname: string;
+      };
+      pullrequest: {
+        type: string;
+        id: number;
+        title: string;
+        links: {
+          self: {
+            href: string;
+          };
+          html: {
+            href: string;
+          };
+        };
+      };
+    };
   }>;
   pagelen: number;
   next: string;
