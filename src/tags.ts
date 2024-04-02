@@ -21,7 +21,7 @@ export async function newTags() {
 
   const flatInput = _.mergeAll(_.flatMap(_.identity, input));
   const flatOutput = _.mergeAll(_.flatMap(_.identity, output));
-  const diff = _.omitBy((v, k) => flatInput[k] === v, flatOutput);
+  const diff = _.omitBy((v, k) => flatInput?.[k] === v, flatOutput);
   if (_.isEmpty(diff)) return;
 
   log(diff);

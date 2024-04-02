@@ -36,7 +36,20 @@ export async function dump(json: any, filename: string) {
   );
 }
 
+async function _exists(filename: string) {
+  try {
+    await fs.access(`${__dirname}/../dump/${filename}`);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
 export async function load<T>(filename: string) {
+  if (!(await _exists(filename))) {
+    return undefined;
+  }
+
   return JSON.parse(
     await fs.readFile(`${__dirname}/../dump/${filename}`, "utf8")
   ) as T;

@@ -26,8 +26,16 @@ export async function prs() {
   );
 
   const activityLog = _.groupBy(
-    "pull_request.id",
-    _.flatten(await Promise.all(REPOS.map(api.getPullRequestsActivity)))
+    "key",
+    _.flatten(
+      (await Promise.all(REPOS.map(api.getPullRequestsActivity))).map(
+        (prs, idx) =>
+          prs.map((pr) => ({
+            key: `${REPOS[idx]}#${pr.pull_request.id}`,
+            ...pr,
+          }))
+      )
+    )
   );
 
   const output = pullRequests
@@ -61,7 +69,7 @@ export async function prs() {
 
   const updated = output
     .map((pr) => {
-      const prev = input.find((i) => i.id === pr.id);
+      const prev = input?.find((i) => i.id === pr.id);
       if (!prev) return pr;
 
       return _.pickBy(_.identity, {
