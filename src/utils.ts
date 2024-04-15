@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import _ from "lodash/fp";
 import fs from "fs/promises";
+import xml2js from "xml2js";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import { inspect } from "util";
@@ -57,4 +58,11 @@ export async function load<T>(filename: string) {
 
 export function log(object: any) {
   console.log(inspect(object, false, null, true));
+}
+
+export async function readXML(filename: string) {
+  const file = await fs.readFile(filename, "utf8");
+  const xml = await xml2js.parseStringPromise(file);
+
+  return xml;
 }
