@@ -49,5 +49,5 @@ export async function getPullRequest(repo: string, id: number) {
 
 export async function getLatestTag(repo: string) {
   const tags = await getTags(repo);
-  return tags[0].name;
+  return tags.filter((tag) => tag.name.match(/^v\d+\.\d+\.\d+$/))[0]?.name;
 }
