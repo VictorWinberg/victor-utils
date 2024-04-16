@@ -66,3 +66,7 @@ export async function readXML(filename: string) {
 
   return xml;
 }
+
+export function getLang(path: string) {
+  return path.match(/translations\.(.+)\.xlf$/)?.[1] || "";
+}
