@@ -7,7 +7,7 @@ import {
   bump,
   dump,
   formatDate,
-  load,
+  json,
   log,
   maybeEmpty,
   maybeIndex,
@@ -16,7 +16,7 @@ import {
 const uniqueId = (pr) => `${pr.destination.repository.name}#${pr.id}`;
 
 export async function prs() {
-  const input = await load<typeof output>("pull-requests.json");
+  const input = await json<typeof output>("pull-requests.json");
 
   const REPOS = [...SERVICES, ...LIBS];
 

@@ -1,16 +1,10 @@
 import * as glob from "glob";
 import _ from "lodash/fp";
-import { $ } from "execa";
 import config from "./config";
-import { __dirname, getLang, log, readXML } from "./utils";
+import { dir, cmd, log, readXML } from "./utils";
 import { XLIFF_STATES } from "./constants";
 
-const { workspace = "" } = config.bitbucket;
-const dir = `${__dirname}/../dump`;
-
-const cmd = (dir?: string) => {
-  return $({ stdout: ["inherit", "pipe"], cwd: dir });
-};
+const { workspace } = config.bitbucket;
 
 const args = process.argv.slice(2);
 const [repo, command, ...extra] = args;
@@ -53,6 +47,8 @@ switch (command) {
     const baseDir = `${dir}/${babelfish}/translations/${repo}`;
     const source = "translations.source.xlf";
     const targets = "translations.*.xlf";
+    const getKey = (s: string) => s.match(/\.(.+)\.xlf$/)?.[1] || "";
+
     type Translation = {
       id: string;
       value: string;
@@ -79,7 +75,7 @@ switch (command) {
 
     if (extra.length > 0) {
       const units = sourceUnits.filter((unit) => extra.includes(unit.$.id));
-      const files = targetFiles.filter((file) => extra.includes(getLang(file)));
+      const files = targetFiles.filter((file) => extra.includes(getKey(file)));
       targetStates = XLIFF_STATES.filter((s) => extra.includes(s));
       const pick = outputPick.filter((s) => extra.includes(s));
 
@@ -102,7 +98,7 @@ switch (command) {
     }
 
     for (const targetFile of targetFiles) {
-      const lang = getLang(targetFile);
+      const key = getKey(targetFile);
 
       const targetXML = await readXML(targetFile);
       const targetUnits = targetXML.xliff.file[0].body[0]["trans-unit"];
@@ -122,7 +118,7 @@ switch (command) {
         );
 
         if (targetStates.length > 0 ? hasTargetState : !unitValue) {
-          (missingTranslations[lang] ||= []).push({
+          (missingTranslations[key] ||= []).push({
             id: sourceId,
             value: unitValue,
             state: unitState,
