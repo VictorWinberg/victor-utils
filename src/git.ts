@@ -35,6 +35,8 @@ switch (command) {
       const tag = `source tag: ${version}-src`;
       await cmd(`${dir}/${repo}`)`git tag -am ${tag} v${version}-src`;
     } else {
+      await cmd(`${dir}/${repo}`)`git show --no-patch`;
+      console.log();
       await cmd(`${dir}/${repo}`)`npm version ${extra[0]}`;
     }
 
