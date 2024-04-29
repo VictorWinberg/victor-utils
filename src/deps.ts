@@ -18,9 +18,9 @@ export async function getDEPs() {
   const valuesRelease = await yaml(`${head}/values-release.yaml`);
 
   function getTag(values, service: string): string {
-    const image = values.image[service.replace(/-/g, "_")];
-    const ui = values.ui[service];
-    return (image || ui)?.tag;
+    const backend = values.backend[service.replace(/-/g, "_")];
+    const frontend = values.frontend[service];
+    return (backend || frontend)?.tag;
   }
 
   const stageTags = SERVICES.map((service) => getTag(values, service));
