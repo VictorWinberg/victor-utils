@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "bot": "tsx src/bot.ts",
     "tags": "tsx src/tags.ts",
     "prs": "tsx src/prs.ts",
     "git": "tsx src/git.ts",
@@ -19,6 +20,7 @@
     "lodash": "^4.17.21",
     "node-fetch": "^3.3.2",
     "open": "^10.1.0",
+    "puppeteer": "^22.8.0",
     "xml2js": "^0.6.2"
   },
   "devDependencies": {
