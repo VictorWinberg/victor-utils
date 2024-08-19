@@ -11,10 +11,10 @@ export default {
     user: process.env.BITBUCKET_USER,
     author: "Victor Winberg",
   },
-  bot: {
+  screenshots: {
     subscriptions: {
-      baseUrl: process.env.BOT_SUBSCRIPTIONS_BASE_URL || "",
-      manageToken: process.env.BOT_SUBSCRIPTIONS_MANAGE_TOKEN || "",
+      baseUrl: process.env.SCREENSHOTS_SUBSCRIPTIONS_BASE_URL || "",
+      manageToken: process.env.SCREENSHOTS_SUBSCRIPTIONS_MANAGE_TOKEN || "",
     },
   },
   deployStuff: {

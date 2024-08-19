@@ -6,8 +6,8 @@ const DIR = "dump/screenshots";
 
 (async () => {
   // Create the screenshot directory
-  await fs.rm(DIR, { recursive: true, force: true });
-  await fs.mkdir(DIR, { recursive: true });
+  // await fs.rm(DIR, { recursive: true, force: true });
+  // await fs.mkdir(DIR, { recursive: true });
 
   // Launch the browser and open a new blank page
   const browser = await puppeteer.launch({
@@ -21,15 +21,15 @@ const DIR = "dump/screenshots";
 
   await newSubscription(page);
   await editAlarmPlan(page);
-  await editCameraPlan(page);
-  await editSecurePlan(page);
-  await editSecureProPlan(page);
+  // await editCameraPlan(page);
+  // await editSecurePlan(page);
+  // await editSecureProPlan(page);
 
   await browser.close();
 })();
 
 async function navigateToDevices(page: Page) {
-  const { baseUrl, manageToken } = config.bot.subscriptions;
+  const { baseUrl, manageToken } = config.screenshots.subscriptions;
   await page.goto(`${baseUrl}/#/devices?manageToken=${manageToken}`);
   await page.waitForNetworkIdle();
 }
@@ -49,8 +49,9 @@ async function pageHasElem(page: Page, ...xpath: string[]) {
 async function newSubscription(page: Page) {
   await navigateToDevices(page);
 
-  const xpath = ["//div[text()='Explore subscription']"];
+  const xpath = ["//div[contains(text(), 'Explore subscription')]"];
   if (!(await pageHasElem(page, ...xpath))) {
+    console.log("No subscription button found");
     return;
   }
 
@@ -61,7 +62,7 @@ async function newSubscription(page: Page) {
   await newAlarmPlan(page);
   await newCameraPlan(page);
   await newSecurePlan(page);
-  await newSecureProPlan(page);
+  // await newSecureProPlan(page);
 }
 
 async function newAlarmPlan(page: Page) {
@@ -75,13 +76,15 @@ async function newAlarmPlan(page: Page) {
     "/button",
   ];
   if (!(await pageHasElem(page, ...xpath))) {
+    console.log("No new alarm plan found");
     return;
   }
 
   await pageClick(page, ...xpath);
-  await page.screenshot({ path: `${DIR}/plan-alarm-plan.png` });
 
+  await page.screenshot({ path: `${DIR}/plan-alarm-plan.png` });
   await pageClick(page, "//button[text()='Continue']");
+
   await page.screenshot({ path: `${DIR}/order-alarm-plan.png` });
 }
 
@@ -96,13 +99,15 @@ async function newCameraPlan(page: Page) {
     "/button",
   ];
   if (!(await pageHasElem(page, ...xpath))) {
+    console.log("No new camera plan found");
     return;
   }
 
   await pageClick(page, ...xpath);
-  await page.screenshot({ path: `${DIR}/plan-camera-plan.png` });
 
+  await page.screenshot({ path: `${DIR}/plan-camera-plan.png` });
   await pageClick(page, "//button[text()='Continue']");
+
   await page.screenshot({ path: `${DIR}/order-camera-plan.png` });
 }
 
@@ -117,21 +122,25 @@ async function newSecurePlan(page: Page) {
     "/button",
   ];
   if (!(await pageHasElem(page, ...xpath))) {
+    console.log("No new secure plan found");
     return;
   }
 
   await pageClick(page, ...xpath);
+
   await page.screenshot({ path: `${DIR}/plan-secure-plan.png` });
-
   await pageClick(page, "//button[text()='Continue']");
-  await page.screenshot({ path: `${DIR}/contacts-new.png` });
 
+  // await page.screenshot({ path: `${DIR}/redundant-subscriptions-new.png` });
+  // await pageClick(page, "//button[text()='Agree']");
+
+  await page.screenshot({ path: `${DIR}/contacts-new.png` });
   await page.type("#emergencyContacts\\[0\\]\\.firstName", "John");
   await page.type("#emergencyContacts\\[0\\]\\.lastName", "Doe");
-  await page.type("#emergencyContacts\\[0\\]\\.phone", "1234567890");
+  await page.type("#emergencyContacts\\[0\\]\\.phone", "33333333");
   await page.screenshot({ path: `${DIR}/contacts-new-filled.png` });
-
   await pageClick(page, "//button[text()='Continue']");
+
   await page.screenshot({ path: `${DIR}/order-secure-plan.png` });
 }
 
@@ -146,46 +155,48 @@ async function newSecureProPlan(page: Page) {
     "/button",
   ];
   if (!(await pageHasElem(page, ...xpath))) {
+    console.log("No new secure pro plan found");
     return;
   }
 
   await pageClick(page, ...xpath);
+
   await page.screenshot({ path: `${DIR}/plan-secure-pro-plan.png` });
-
   await pageClick(page, "//button[text()='Continue']");
+
+  await page.screenshot({ path: `${DIR}/redundant-subscriptions-new.png` });
+  await pageClick(page, "//button[text()='Agree']");
+
   await page.screenshot({ path: `${DIR}/home-address-new.png` });
-
   await pageClick(page, "//button[text()='Continue']");
-  await page.screenshot({ path: `${DIR}/home-address-new-required.png` });
 
+  await page.screenshot({ path: `${DIR}/home-address-new-required.png` });
   await page.type("#siteName", "John Doe");
   await page.type("#siteAddress1", "123 Main St");
   await page.type("#cityName", "Anytown");
   await page.type("#zipCode", "12345");
   await page.screenshot({ path: `${DIR}/home-address-new-filled.png` });
-
   await pageClick(page, "//button[text()='Continue']");
+
   await page.screenshot({ path: `${DIR}/contacts-new.png` });
-
   await pageClick(page, "//button[text()='Continue']");
-  await page.screenshot({ path: `${DIR}/contacts-new-required.png` });
 
+  await page.screenshot({ path: `${DIR}/contacts-new-required.png` });
   await page.type("#emergencyContacts\\[0\\]\\.firstName", "John");
   await page.type("#emergencyContacts\\[0\\]\\.lastName", "Doe");
   await page.type("#emergencyContacts\\[0\\]\\.phone", "1234567890");
   await page.screenshot({ path: `${DIR}/contacts-new-filled.png` });
-
   await pageClick(page, "//button[text()='Continue']");
+
   await page.screenshot({ path: `${DIR}/security-phrase-new.png` });
-
   await pageClick(page, "//button[text()='Continue']");
-  await page.screenshot({ path: `${DIR}/security-phrase-new-required.png` });
 
+  await page.screenshot({ path: `${DIR}/security-phrase-new-required.png` });
   await page.type("#codeword", "1234");
   await page.type("#codewordConfirm", "1234");
   await page.screenshot({ path: `${DIR}/security-phrase-new-filled.png` });
-
   await pageClick(page, "//button[text()='Continue']");
+
   await page.screenshot({ path: `${DIR}/order-secure-pro-plan.png` });
 }
 
@@ -197,13 +208,15 @@ async function editAlarmPlan(page: Page) {
     "/following-sibling::div[contains(@class, 'active')]",
   ];
   if (!(await pageHasElem(page, ...xpath))) {
+    console.log("No active alarm plan found");
     return;
   }
 
   await pageClick(page, ...xpath);
-  await page.screenshot({ path: `${DIR}/edit-alarm-plan.png` });
 
+  await page.screenshot({ path: `${DIR}/edit-alarm-plan.png` });
   await pageClick(page, "//button[text()='Cancel subscription']");
+
   await page.screenshot({ path: `${DIR}/cancel-alarm-plan.png` });
   await pageClick(page, "//button[text()='Close']");
 }
@@ -216,13 +229,15 @@ async function editCameraPlan(page: Page) {
     "/following-sibling::div[contains(@class, 'active')]",
   ];
   if (!(await pageHasElem(page, ...xpath))) {
+    console.log("No active camera plan found");
     return;
   }
 
   await pageClick(page, ...xpath);
-  await page.screenshot({ path: `${DIR}/edit-camera-plan.png` });
 
+  await page.screenshot({ path: `${DIR}/edit-camera-plan.png` });
   await pageClick(page, "//button[text()='Cancel subscription']");
+
   await page.screenshot({ path: `${DIR}/cancel-camera-plan.png` });
   await pageClick(page, "//button[text()='Close']");
 }
@@ -235,13 +250,15 @@ async function editSecurePlan(page: Page) {
     "/following-sibling::div[contains(@class, 'active')]",
   ];
   if (!(await pageHasElem(page, ...xpath))) {
+    console.log("No active secure plan found");
     return;
   }
 
   await pageClick(page, ...xpath);
-  await page.screenshot({ path: `${DIR}/edit-secure-plan.png` });
 
+  await page.screenshot({ path: `${DIR}/edit-secure-plan.png` });
   await pageClick(page, "//button[text()='Cancel subscription']");
+
   await page.screenshot({ path: `${DIR}/cancel-secure-plan.png` });
   await pageClick(page, "//button[text()='Close']");
 
@@ -257,12 +274,13 @@ async function editSecureProPlan(page: Page) {
     "/following-sibling::div[contains(@class, 'active')]",
   ];
   if (!(await pageHasElem(page, ...xpath))) {
+    console.log("No active secure pro plan found");
     return;
   }
 
   await pageClick(page, ...xpath);
-  await page.screenshot({ path: `${DIR}/edit-secure-pro-plan.png` });
 
+  await page.screenshot({ path: `${DIR}/edit-secure-pro-plan.png` });
   await pageClick(page, "//button[text()='Cancel subscription']");
   await page.screenshot({ path: `${DIR}/cancel-secure-pro-plan.png` });
 

@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "bot": "tsx src/bot.ts",
     "tags": "tsx src/tags.ts",
     "prs": "tsx src/prs.ts",
     "git": "tsx src/git.ts",
+    "screenshots": "tsx src/screenshots.ts",
     "deps": "tsx src/deps.ts",
     "watch": "tsx src/watch.ts"
   },
